@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entropy — an information-theoretic Wordle solver</title>
+<meta name="description" content="A Wordle solver and player that picks each guess by maximizing expected information gain (Shannon entropy), built by Reeya Gyanmote." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Information theory / word game</p>
+    <h1 class="title">Every guess destroys<br /><span class="dim">uncertainty.</span></h1>
+    <p class="tagline">
+      <strong>Entropy</strong> plays Wordle by asking one question at each turn: which guess is
+      expected to eliminate the most possibilities, no matter what comes back? Play a round below,
+      or flip to Assist mode and use it as a co-pilot for a real Wordle game.
+    </p>
+
+    <div class="mode-toggle" role="tablist" aria-label="Mode">
+      <button id="mode-play" class="active" role="tab" aria-selected="true">Play</button>
+      <button id="mode-assist" role="tab" aria-selected="false">Assist a real game</button>
+    </div>
+  </header>
+
+  <main class="main-grid">
+
+    <section class="board-panel">
+      <div id="status" class="status-line" aria-live="polite">Guess a 5-letter word to begin.</div>
+
+      <div id="board" class="board" aria-label="Wordle board"></div>
+
+      <div class="actions">
+        <button id="btn-suggest" class="btn primary">Fill best guess</button>
+        <button id="btn-new" class="btn">New game</button>
+      </div>
+
+      <div id="keyboard" class="keyboard" aria-label="Keyboard"></div>
+    </section>
+
+    <aside class="side-panel">
+
+      <div class="panel-card">
+        <p class="panel-label">Uncertainty remaining</p>
+        <div>
+          <span id="bits-value" class="bits-value">13.9</span><span class="bits-unit">bits &nbsp;(<span id="cand-count">14,855</span> words)</span>
+        </div>
+        <div class="bits-bar-track"><div id="bits-bar" class="bits-bar-fill" style="width:100%"></div></div>
+        <p class="bits-sub">log₂(remaining candidates). A random 5-letter word from this list starts at ~13.9 bits of uncertainty — each guess's feedback cuts a chunk of that away.</p>
+      </div>
+
+      <div class="panel-card">
+        <p class="panel-label">Suggested guess</p>
+        <div id="suggest-word" class="suggest-word">TARES</div>
+        <p id="suggest-meta" class="suggest-meta">Precomputed opener · expected 6.16 bits</p>
+      </div>
+
+      <div class="panel-card">
+        <p class="panel-label">Guess ledger</p>
+        <div id="ledger" class="ledger">
+          <p class="ledger-empty">No guesses yet.</p>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <section class="explainer">
+    <h2>How the solver thinks</h2>
+
+    <div>
+      <div class="step-num">01</div>
+      <h3>Every guess yields a pattern</h3>
+      <p>Comparing a guess to any possible answer produces one of 3⁵ = 243 green/yellow/gray patterns. Nothing is graded on being "right" yet — just on what shape of feedback it produces.</p>
+    </div>
+
+    <div>
+      <div class="step-num">02</div>
+      <h3>Score by expected information</h3>
+      <p>For each candidate guess, group the remaining possible answers by the pattern they'd produce, then compute the Shannon entropy of that split: H = −Σ p·log₂(p). Higher entropy means a more even split.</p>
+    </div>
+
+    <div>
+      <div class="step-num">03</div>
+      <h3>Play the highest-entropy guess</h3>
+      <p>The guess that splits the field most evenly is expected to shrink it the most, regardless of the real answer. Filter candidates by the real feedback, and repeat.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Built by Reeya Gyanmote · entropy-based Wordle solver</span>
+    <a href="https://github.com/" target="_blank" rel="noopener">View source on GitHub →</a>
+  </footer>
+
+</div>
+
+<script src="words.js"></script>
+<script src="solver.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
