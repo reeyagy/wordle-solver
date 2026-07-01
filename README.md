@@ -53,7 +53,7 @@ guess ledger showing expected vs. actual information gained each turn. It
 runs entirely client-side, so it can be hosted for free with GitHub Pages:
 
 **Settings → Pages → Deploy from branch → `main` / `docs`**, then visit
-`https://reeyagy.github.io/wordle-entropy-solver/`.
+`https://reeyagy.github.io/wordle-solver/`.
 
 Two modes:
 - **Play** — the site picks a random secret word and scores your guesses automatically.
