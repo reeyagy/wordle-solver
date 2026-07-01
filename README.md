@@ -45,6 +45,20 @@ uncommon/archaic words) rather than the NYT's curated ~2,300-word answer
 list, so average performance here is a bit worse than it would be against
 the real Wordle answer set, which skews toward common words.
 
+## Web app
+
+The `docs/` folder is a full browser port (vanilla JS, no build step, no
+backend) — a playable Wordle board with a live "bits remaining" gauge and a
+guess ledger showing expected vs. actual information gained each turn. It
+runs entirely client-side, so it can be hosted for free with GitHub Pages:
+
+**Settings → Pages → Deploy from branch → `main` / `docs`**, then visit
+`https://reeyagy.github.io/wordle-entropy-solver/`.
+
+Two modes:
+- **Play** — the site picks a random secret word and scores your guesses automatically.
+- **Assist a real game** — type the guess you actually made in a real Wordle game, then click each tile to match the colors it gave you; the solver suggests your next move.
+
 ## Usage
 
 ```bash
@@ -80,10 +94,16 @@ Suggested guess: CLOUD  (expected info: 4.71 bits)
 
 ```
 wordle-solver/
-├── solver.py          # core entropy/scoring engine
+├── solver.py          # core entropy/scoring engine (Python)
 ├── play.py             # interactive CLI to use alongside a real game
 ├── benchmark.py         # measures average solver performance
 ├── words.txt             # 5-letter word list
+├── docs/                   # browser port — playable site (GitHub Pages)
+│   ├── index.html
+│   ├── style.css
+│   ├── solver.js            # entropy engine, ported from solver.py
+│   ├── app.js                # game state + UI
+│   └── words.js                # word list as a JS array
 ├── tests/
 │   └── test_solver.py    # correctness tests for scoring + solver
 └── requirements.txt
@@ -105,3 +125,4 @@ pytest tests/ -v
   don't recompute patterns already seen in earlier games.
 - Explore alternative scoring functions (e.g. minimax worst-case
   candidates remaining) instead of pure entropy.
+
